@@ -46,7 +46,7 @@ namespace faker
                             fake_data += JObject.Parse(datafile)["prefix"][1] + rnd.Next(1, 5).ToString();
                         }
 
-                        fake_data += ", " + faker.Address.SecondaryAddress() + ", " + faker.Phone.PhoneNumberFormat() + "; ";                        
+                        fake_data += ", " + faker.Address.SecondaryAddress() + ", " + faker.Phone.PhoneNumberFormat() + ";";                        
                         Console.WriteLine(fake_data);
                     }
                 }
@@ -65,7 +65,8 @@ namespace faker
                            fake_data += faker.Name.FullName(Name.Gender.Male) + "; "; 
                        }
                         fake_data += faker.Address.ZipCode() + ", " + JObject.Parse(datafile)["country"][1] + ", " + faker.Address.City() + ", " +
-                        faker.Address.StreetAddress() + ", " + faker.Address.SecondaryAddress();
+                        faker.Address.StreetAddress() + " " + faker.Address.StreetSuffix() + ", " + faker.Address.SecondaryAddress() + "; " +
+                        faker.Phone.PhoneNumberFormat() + ";";
 
                         Console.WriteLine(fake_data);
                     }    
