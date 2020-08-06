@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 using Newtonsoft.Json.Linq;
 using Bogus;
@@ -13,13 +14,21 @@ namespace faker
     {
         static void Main(string[] args)
         {
-           string language = args[1];
            if ((args.Length < 3) || (args.Length > 4))
            {
-               Console.WriteLine("Wrong number of args = " + (args.Length - 1));
+               Console.WriteLine("wrong number of args = " + (args.Length - 1) + ", expected 2 or 3");
+           }
+           else if (args[1] != "ru_RU" && args[1] != "en_US" && args[1] != "be_BY")
+           {
+                Console.WriteLine($"args[1] should be ru_RU, en_US or be_BY, not {args[1]}");
+           }
+           else if (!(Regex.IsMatch(args[2], @"^\d+$")))
+           {
+               Console.WriteLine($"args[1] should be a number, not {args[2]}");
            }
            else
            {
+               string language = args[1];
                int linesNumber = Convert.ToInt32(args[2]);
  
                if (args[1] == "ru_RU")
@@ -37,7 +46,7 @@ namespace faker
                    PrintBY(linesNumber);
                }
            }    
-            // string language = "en_US";                                                                                                  // я полагаю что тебе нужно будет сделать метод PrintRU_US_BY типо String с return fake_data; потом сделать типо счетчика который будет срабатывать на 3 параметр (проблема с числами меньше 1) и делать метод MakeErrors относительно счетчика а не for'a и выводить строку с измененной датой
+            // string language = "en_US";
             // string fake_data = "Omar Howell; 26695-4040, USA, Gusttown, 82586 Layla Parkway Shores, Suite 210; 443-901-7769";
 
             // Console.WriteLine(fake_data);                                                                   
@@ -182,11 +191,8 @@ namespace faker
     }
 }
  
-// бел алфовит я думаю нужно засунуть в базу данных или в файлик и из него достать потому как если это делать через ascii то ну нах или даже все языки так сделать в одной строке
 //А а	Б б	В в	Г г	Д д	(Дж дж)	(Дз дз)	Е е
 //Ё ё	Ж ж	З з	І і	Й й	К к	Л л	М м
 //Н н	О о	П п	Р р	С с	Т т	У у	Ў ў
 //Ф ф	Х х	Ц ц	Ч ч	Ш ш	Ы ы	Ь ь	Э э
 //Ю ю	Я я	
-
-// + я коментил потому как не могу воспользоваться консолью.
