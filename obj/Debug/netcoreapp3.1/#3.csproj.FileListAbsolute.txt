@@ -1,0 +1,17 @@
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\#3.exe
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\#3.deps.json
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\#3.runtimeconfig.json
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\#3.runtimeconfig.dev.json
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\#3.dll
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\#3.pdb
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\Bogus.dll
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.csprojAssemblyReference.cache
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.AssemblyInfoInputs.cache
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.AssemblyInfo.cs
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.csproj.CoreCompileInputs.cache
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.csproj.CopyComplete
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.dll
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.pdb
+E:\[Programming]\Itransition courses Js\#3\obj\Debug\netcoreapp3.1\#3.genruntimeconfig.cache
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+E:\[Programming]\Itransition courses Js\#3\bin\Debug\netcoreapp3.1\Json.Net.dll

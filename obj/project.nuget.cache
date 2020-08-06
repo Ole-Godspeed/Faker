@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "u7R3zs6CxivNW2E8DY2xl2I79RrQA3xOLNAJFysWvZrpTRKSfG2LnMLR/n1pbFBLDnZim/5+nWCx0pLCkYp5Ng==",
+  "success": true,
+  "projectFilePath": "E:\\[Programming]\\Itransition courses Js\\#3\\#3.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\varta\\.nuget\\packages\\bogus\\29.0.2\\bogus.29.0.2.nupkg.sha512",
+    "C:\\Users\\varta\\.nuget\\packages\\json.net\\1.0.23\\json.net.1.0.23.nupkg.sha512",
+    "C:\\Users\\varta\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
