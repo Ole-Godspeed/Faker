@@ -24,7 +24,7 @@ namespace faker
            }
            else if (!(Regex.IsMatch(args[2], @"^\d+$")))
            {
-               Console.WriteLine($"args[1] should be a number, not {args[2]}");
+               Console.WriteLine($"args[1] should be an integer, not {args[2]}");
            }
            else
            {   
