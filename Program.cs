@@ -20,41 +20,44 @@ namespace faker
            }
            else if (args[1] != "ru_RU" && args[1] != "en_US" && args[1] != "be_BY")
            {
-                Console.WriteLine($"args[1] should be ru_RU, en_US or be_BY, not {args[1]}");
+               Console.WriteLine($"args[1] should be ru_RU, en_US or be_BY, not {args[1]}");
            }
            else if (!(Regex.IsMatch(args[2], @"^\d+$")))
            {
                Console.WriteLine($"args[1] should be a number, not {args[2]}");
            }
            else
-           {
-               string language = args[1];
-               int linesNumber = Convert.ToInt32(args[2]);
+           {   
+                int num_error;
+                if (args.Length == 3)
+                {
+                    num_error = 0;
+                }
+                else
+                {
+                    num_error = Convert.ToInt32(args[3]);
+                }
+                string language = args[1];
+                int linesNumber = Convert.ToInt32(args[2]);
  
-               if (args[1] == "ru_RU")
-               {
-                   PrintRU(linesNumber);
-               }
- 
-               if (args[1] == "en_US")
-               {
-                   PrintUS(linesNumber);
-               }
+                if (args[1] == "ru_RU")
+                {
+                    PrintRU(linesNumber, language);
+                }
 
-               if (args[1] == "be_BY")
-               {
-                   PrintBY(linesNumber);
-               }
-           }    
-            // string language = "en_US";
-            // string fake_data = "Omar Howell; 26695-4040, USA, Gusttown, 82586 Layla Parkway Shores, Suite 210; 443-901-7769";
+                if (args[1] == "en_US")
+                {
+                    PrintUS(linesNumber, language, num_error);
+                }
 
-            // Console.WriteLine(fake_data);                                                                   
-            // Console.WriteLine(MakeErrors(fake_data, 10, rnd, language));
-            // Console.ReadLine();
+                if (args[1] == "be_BY")
+                {
+                    PrintBY(linesNumber, language);
+                }
+           }                                                                      
         }
 
-        static void PrintRU(int linesNumber)
+        static void PrintRU(int linesNumber, string language)
         {
             String fake_data;
             Random rnd = new Random();
@@ -84,11 +87,11 @@ namespace faker
                 Console.WriteLine(fake_data);
             }
         }
-        static void PrintUS(int linesNumber)
+        static void PrintUS(int linesNumber, string language, int num_error)
         {
             String fake_data;
             Random rnd = new Random();
-            var faker = new Faker("en_US");
+            var faker = new Faker(language);
             for (int i = 0; i < linesNumber; i++)
             {
                 fake_data = "";
@@ -105,10 +108,17 @@ namespace faker
                 faker.Address.StreetAddress() + " " + faker.Address.StreetSuffix() + ", " + faker.Address.SecondaryAddress() + "; " +
                 faker.Phone.PhoneNumberFormat() + ";";
 
-                Console.WriteLine(fake_data);
+                if (num_error == 0)
+                {
+                    Console.WriteLine(fake_data);
+                }
+                else
+                {
+                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language));
+                }
             }
         }
-        static void PrintBY(int linesNumber)
+        static void PrintBY(int linesNumber, string language)
         {
             String fake_data;
             Random rnd = new Random();
@@ -137,56 +147,48 @@ namespace faker
         }
         static String MakeErrors(string fake_data, int num_error , Random rnd, string language)
         {
+            int switchOption;
             var fake_data_builder = new StringBuilder(fake_data);
             for (int i = 0; i < num_error; i++)
             {
-                int rand = rnd.Next(fake_data.Length);
-                fake_data_builder = fake_data_builder.Remove(rand, 1);
+                int rand = rnd.Next(fake_data_builder.Length);
 
-                if (language == "en_US")
+                if (fake_data_builder.Length < 45) {switchOption = rnd.Next(2);}
+                else if (fake_data_builder.Length > 90) {switchOption = rnd.Next(1,3);}
+                else {switchOption = rnd.Next(3);}
+                switch (switchOption)
                 {
-                    switch (rnd.Next(3))
-                    {
-                        case 0:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(48, 57));     // numbers
-                            break;
-                        case 1:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(97, 122));    // low en
-                            break;
-                        case 2:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(65, 90));     // high en
-                            break;
-                    }
-                }
-                else if (language == "ru")
-                {
-                    switch (rnd.Next(2))
-                    {
-                        case 0:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(48, 57));     // numbers
-                            break;
-                        case 1:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(192, 255));   // all ru
-                            break;
-                    }        
-                }
-                else
-                {
-                    switch (rnd.Next(2))
-                    {
-                        case 0:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(48, 57));     // numbers
-                            break;
-                        case 1:
-                            fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(192, 255));   // all ru 
-                            break;
-                                                                                                            // !!! нужно доделать бел язык 
-                    }        
-                }
-                
-                
+                    case 0:     // adding symbol
+                        switch (rnd.Next(3))
+                        {
+                            case 0:
+                                fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(48, 57));     // number
+                                break;
+                            case 1:
+                                fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(97, 122));    // lowcase char
+                                break;
+                            case 2:
+                                fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(65, 90));     // highcase char
+                                break;
+                        }
+                        break;
+                    case 1: // swapping 2 adjacent symbols
+                        if (rand > fake_data_builder.Length - 2) {rand -= 2;}
+                        fake_data_builder = fake_data_builder.Insert(rand, Reverse(fake_data_builder.ToString(rand, 2)));
+                        fake_data_builder = fake_data_builder.Remove(rand+2, 2);  
+                        break; 
+                    case 2: // deleting symbol
+                        fake_data_builder = fake_data_builder.Remove(rand, 1);     
+                        break;                           
+                }                
             }
                 return fake_data_builder.ToString();
+        }
+        public static string Reverse( string s )
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse( charArray );
+            return new string( charArray );
         }
     }
 }
