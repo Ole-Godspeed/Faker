@@ -42,7 +42,7 @@ namespace faker
  
                 if (args[1] == "ru_RU")
                 {
-                    PrintRU(linesNumber, language);
+                    PrintRU(linesNumber, language, num_error);
                 }
 
                 if (args[1] == "en_US")
@@ -52,28 +52,28 @@ namespace faker
 
                 if (args[1] == "be_BY")
                 {
-                    PrintBY(linesNumber, language);
+                    PrintBY(linesNumber, language, num_error);
                 }
            }                                                                      
         }
-
-        static void PrintRU(int linesNumber, string language)
+        static void PrintRU(int linesNumber, string language, int num_error)
         {
             String fake_data;
+            dynamic datafile = JObject.Parse(File.ReadAllText("ru_RUdata.json"));
+            dynamic charfile = JObject.Parse(File.ReadAllText("RU_BYcharset.json"));
             Random rnd = new Random();
             var faker = new Faker("ru");
-            dynamic datafile = JObject.Parse(File.ReadAllText("ru_RUdata.json"));
             for (int i = 0; i < linesNumber; i++)
             {
                 fake_data = "";
 
                 if (rnd.Next(2) == 1)
                 {
-                    fake_data += faker.Name.FullName(Name.Gender.Female) + " " + datafile.male_middle_name[rnd.Next(51)] + "; ";
+                    fake_data += faker.Name.FullName(Name.Gender.Female) + " " + datafile.female_middle_name[rnd.Next(datafile.female_middle_name.Count)] + "; ";
                 }
                 else
                 {
-                    fake_data += faker.Name.FullName(Name.Gender.Male) + " " + datafile.male_middle_name[rnd.Next(52)] + "; ";
+                    fake_data += faker.Name.FullName(Name.Gender.Male) + " " + datafile.male_middle_name[rnd.Next(datafile.male_middle_name.Count)] + "; ";
                 }
 
                 fake_data += faker.Address.ZipCode() + ", " + datafile.country + ", " + faker.Address.City() + ", " +
@@ -84,12 +84,21 @@ namespace faker
                 }
 
                 fake_data += ", " + faker.Address.SecondaryAddress() + "; " + faker.Phone.PhoneNumberFormat() + "; ";
-                Console.WriteLine(fake_data);
+                
+                if (num_error == 0)
+                {
+                    Console.WriteLine(fake_data);
+                }
+                else
+                {   
+                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language, charfile.ru_RU));
+                }
             }
         }
         static void PrintUS(int linesNumber, string language, int num_error)
         {
             String fake_data;
+            dynamic charfile = JObject.Parse(File.ReadAllText("RU_BYcharset.json"));
             Random rnd = new Random();
             var faker = new Faker(language);
             for (int i = 0; i < linesNumber; i++)
@@ -113,16 +122,17 @@ namespace faker
                     Console.WriteLine(fake_data);
                 }
                 else
-                {
-                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language));
+                {   
+                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language, charfile.en_US));
                 }
             }
         }
-        static void PrintBY(int linesNumber, string language)
+        static void PrintBY(int linesNumber, string language, int num_error)
         {
             String fake_data;
             Random rnd = new Random();
             dynamic datafile = JObject.Parse(File.ReadAllText("be_BYdata.json"));
+            dynamic charfile = JObject.Parse(File.ReadAllText("RU_BYcharset.json"));
             for (int i = 0; i < linesNumber; i++)
             {
                 fake_data = "";
@@ -142,10 +152,17 @@ namespace faker
                 datafile.prefix[0] + rnd.Next(1, 333).ToString() + ", " + datafile.prefix[2] +
                 rnd.Next(1, 600).ToString() + "; " + datafile.phonenumber_codes[rnd.Next(4)] + rnd.Next(1000000, 9999999).ToString() + "; ";
 
-                Console.WriteLine(fake_data);   
+                if (num_error == 0)
+                {
+                    Console.WriteLine(fake_data);
+                }
+                else
+                {
+                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language, charfile.be_BY));                    
+                }   
             }
         }
-        static String MakeErrors(string fake_data, int num_error , Random rnd, string language)
+        static String MakeErrors(string fake_data, int num_error , Random rnd, string language, dynamic charfile)
         {
             int switchOption;
             var fake_data_builder = new StringBuilder(fake_data);
@@ -153,24 +170,13 @@ namespace faker
             {
                 int rand = rnd.Next(fake_data_builder.Length);
 
-                if (fake_data_builder.Length < 45) {switchOption = rnd.Next(2);}
+                if (fake_data_builder.Length < 65) {switchOption = rnd.Next(2);}
                 else if (fake_data_builder.Length > 90) {switchOption = rnd.Next(1,3);}
                 else {switchOption = rnd.Next(3);}
                 switch (switchOption)
                 {
                     case 0:     // adding symbol
-                        switch (rnd.Next(3))
-                        {
-                            case 0:
-                                fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(48, 57));     // number
-                                break;
-                            case 1:
-                                fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(97, 122));    // lowcase char
-                                break;
-                            case 2:
-                                fake_data_builder = fake_data_builder.Insert(rand, (char)rnd.Next(65, 90));     // highcase char
-                                break;
-                        }
+                        fake_data_builder = fake_data_builder.Insert(rand, charfile[rnd.Next(charfile.Count)]);
                         break;
                     case 1: // swapping 2 adjacent symbols
                         if (rand > fake_data_builder.Length - 2) {rand -= 2;}
@@ -182,7 +188,7 @@ namespace faker
                         break;                           
                 }                
             }
-                return fake_data_builder.ToString();
+            return fake_data_builder.ToString();
         }
         public static string Reverse( string s )
         {
@@ -192,9 +198,3 @@ namespace faker
         }
     }
 }
- 
-//А а	Б б	В в	Г г	Д д	(Дж дж)	(Дз дз)	Е е
-//Ё ё	Ж ж	З з	І і	Й й	К к	Л л	М м
-//Н н	О о	П п	Р р	С с	Т т	У у	Ў ў
-//Ф ф	Х х	Ц ц	Ч ч	Ш ш	Ы ы	Ь ь	Э э
-//Ю ю	Я я	
