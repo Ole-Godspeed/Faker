@@ -28,35 +28,35 @@ namespace faker
            }
            else
            {   
-                int num_error;
+                int errorsNumber;
                 if (args.Length == 3)
                 {
-                    num_error = 0;
+                    errorsNumber = 0;
                 }
                 else
                 {
-                    num_error = Convert.ToInt32(args[3]);
+                    errorsNumber = Convert.ToInt32(args[3]);
                 }
                 string language = args[1];
                 int linesNumber = Convert.ToInt32(args[2]);
  
                 if (args[1] == "ru_RU")
                 {
-                    PrintRU(linesNumber, language, num_error);
+                    PrintRU(linesNumber, errorsNumber);
                 }
 
                 if (args[1] == "en_US")
                 {
-                    PrintUS(linesNumber, language, num_error);
+                    PrintUS(linesNumber, errorsNumber);
                 }
 
                 if (args[1] == "be_BY")
                 {
-                    PrintBY(linesNumber, language, num_error);
+                    PrintBY(linesNumber, errorsNumber);
                 }
            }                                                                      
         }
-        static void PrintRU(int linesNumber, string language, int num_error)
+        static void PrintRU(int linesNumber, int errorsNumber)
         {
             String fake_data;
             dynamic datafile = JObject.Parse(File.ReadAllText("ru_RUdata.json"));
@@ -85,22 +85,22 @@ namespace faker
 
                 fake_data += ", " + faker.Address.SecondaryAddress() + "; " + faker.Phone.PhoneNumberFormat() + "; ";
                 
-                if (num_error == 0)
+                if (errorsNumber == 0)
                 {
                     Console.WriteLine(fake_data);
                 }
                 else
                 {   
-                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language, charfile.ru_RU));
+                    Console.WriteLine(MakeErrors(fake_data, errorsNumber, rnd, charfile.ru_RU));
                 }
             }
         }
-        static void PrintUS(int linesNumber, string language, int num_error)
+        static void PrintUS(int linesNumber, int errorsNumber)
         {
             String fake_data;
             dynamic charfile = JObject.Parse(File.ReadAllText("RU_BYcharset.json"));
             Random rnd = new Random();
-            var faker = new Faker(language);
+            var faker = new Faker("en_US");
             for (int i = 0; i < linesNumber; i++)
             {
                 fake_data = "";
@@ -117,17 +117,17 @@ namespace faker
                 faker.Address.StreetAddress() + " " + faker.Address.StreetSuffix() + ", " + faker.Address.SecondaryAddress() + "; " +
                 faker.Phone.PhoneNumberFormat() + ";";
 
-                if (num_error == 0)
+                if (errorsNumber == 0)
                 {
                     Console.WriteLine(fake_data);
                 }
                 else
                 {   
-                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language, charfile.en_US));
+                    Console.WriteLine(MakeErrors(fake_data, errorsNumber, rnd, charfile.en_US));
                 }
             }
         }
-        static void PrintBY(int linesNumber, string language, int num_error)
+        static void PrintBY(int linesNumber, int errorsNumber)
         {
             String fake_data;
             Random rnd = new Random();
@@ -152,21 +152,21 @@ namespace faker
                 datafile.prefix[0] + rnd.Next(1, 333).ToString() + ", " + datafile.prefix[2] +
                 rnd.Next(1, 600).ToString() + "; " + datafile.phonenumber_codes[rnd.Next(4)] + rnd.Next(1000000, 9999999).ToString() + "; ";
 
-                if (num_error == 0)
+                if (errorsNumber == 0)
                 {
                     Console.WriteLine(fake_data);
                 }
                 else
                 {
-                    Console.WriteLine(MakeErrors(fake_data, num_error, rnd, language, charfile.be_BY));                    
+                    Console.WriteLine(MakeErrors(fake_data, errorsNumber, rnd, charfile.be_BY));                    
                 }   
             }
         }
-        static String MakeErrors(string fake_data, int num_error , Random rnd, string language, dynamic charfile)
+        static String MakeErrors(string fake_data, int errorsNumber , Random rnd, dynamic charfile)
         {
             int switchOption;
             var fake_data_builder = new StringBuilder(fake_data);
-            for (int i = 0; i < num_error; i++)
+            for (int i = 0; i < errorsNumber; i++)
             {
                 int rand = rnd.Next(fake_data_builder.Length);
 
