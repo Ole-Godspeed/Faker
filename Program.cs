@@ -26,7 +26,7 @@ namespace faker
            {
                Console.WriteLine($"args[2] should be an integer, not {args[2]}");
            }
-           else if (args.Length == 4 && !(Regex.IsMatch(args[3], @"^\d+\.?\d+$")))
+           else if (args.Length == 4 && !(Regex.IsMatch(args[3], @"^\d+\.?\d+$")) && !(Regex.IsMatch(args[3], @"^\d+\.?$")))
            {
                Console.WriteLine($"args[3] should be an number, not {args[3]}");
            }
@@ -179,15 +179,15 @@ namespace faker
                 else {switchOption = rnd.Next(3);}
                 switch (switchOption)
                 {
-                    case 0:     // adding symbol
+                    case 0:
                         fake_data_builder = fake_data_builder.Insert(rand, charfile[rnd.Next(charfile.Count)]);
                         break;
-                    case 1: // swapping 2 adjacent symbols
+                    case 1:
                         if (rand > fake_data_builder.Length - 2) {rand -= 2;}
                         fake_data_builder = fake_data_builder.Insert(rand, Reverse(fake_data_builder.ToString(rand, 2)));
                         fake_data_builder = fake_data_builder.Remove(rand+2, 2);  
                         break; 
-                    case 2: // deleting symbol
+                    case 2:
                         fake_data_builder = fake_data_builder.Remove(rand, 1);     
                         break;                           
                 }                
