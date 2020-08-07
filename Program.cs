@@ -24,18 +24,22 @@ namespace faker
            }
            else if (!(Regex.IsMatch(args[2], @"^\d+$")))
            {
-               Console.WriteLine($"args[1] should be an integer, not {args[2]}");
+               Console.WriteLine($"args[2] should be an integer, not {args[2]}");
+           }
+           else if (args.Length == 4 && !(Regex.IsMatch(args[3], @"^\d+\.?\d+$")))
+           {
+               Console.WriteLine($"args[3] should be an number, not {args[3]}");
            }
            else
            {   
-                int errorsNumber;
+                double errorsNumber;
                 if (args.Length == 3)
                 {
                     errorsNumber = 0;
                 }
                 else
                 {
-                    errorsNumber = Convert.ToInt32(args[3]);
+                    errorsNumber = Convert.ToDouble(args[3]);
                 }
                 string language = args[1];
                 int linesNumber = Convert.ToInt32(args[2]);
@@ -56,7 +60,7 @@ namespace faker
                 }
            }                                                                      
         }
-        static void PrintRU(int linesNumber, int errorsNumber)
+        static void PrintRU(int linesNumber, double errorsNumber)
         {
             String fake_data;
             dynamic datafile = JObject.Parse(File.ReadAllText("ru_RUdata.json"));
@@ -95,7 +99,7 @@ namespace faker
                 }
             }
         }
-        static void PrintUS(int linesNumber, int errorsNumber)
+        static void PrintUS(int linesNumber, double errorsNumber)
         {
             String fake_data;
             dynamic charfile = JObject.Parse(File.ReadAllText("RU_BYcharset.json"));
@@ -127,7 +131,7 @@ namespace faker
                 }
             }
         }
-        static void PrintBY(int linesNumber, int errorsNumber)
+        static void PrintBY(int linesNumber, double errorsNumber)
         {
             String fake_data;
             Random rnd = new Random();
@@ -162,11 +166,11 @@ namespace faker
                 }   
             }
         }
-        static String MakeErrors(string fake_data, int errorsNumber , Random rnd, dynamic charfile)
+        static String MakeErrors(string fake_data, double errorsNumber , Random rnd, dynamic charfile)
         {
             int switchOption;
             var fake_data_builder = new StringBuilder(fake_data);
-            for (int i = 0; i < errorsNumber; i++)
+            for (int i = 0; i < RoundChance(errorsNumber, rnd); i++)
             {
                 int rand = rnd.Next(fake_data_builder.Length);
 
@@ -196,5 +200,18 @@ namespace faker
             Array.Reverse( charArray );
             return new string( charArray );
         }
+
+        public static int RoundChance( double number, Random rnd)
+            {
+                int p = (int)((number - (int)number) * 100);
+                if (p > (int)rnd.Next(100))
+                {
+                    return (int)number + 1;
+                }
+                else
+                {
+                    return (int)number;
+                }
+            }
     }
 }
